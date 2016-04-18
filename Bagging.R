@@ -4,7 +4,6 @@ library(rpart)
 library(rattle)
 library(rpart.plot)
 library(RColorBrewer)
-library(randomForest)
 
 setwd("C:/Users/Anindita/Documents/ALDA/Project")
 
@@ -100,139 +99,27 @@ str(TrainNew)
 # Sampling
 #############################################################
 
+
+############################ for loop #####################################
+
 TrainNew <- TrainNew[sample(1:nrow(TrainNew), 100000,
                             replace=FALSE),]
+trainIndex <- createDataPartition(dataTrain$CategoryMap, p = 0.3, list = FALSE, times = 1)
+dataTest <- TrainNew[trainIndex,]
+tree.pred <- matrix(nrow = nrow(dataTest), ncol = 10)
+for ( i in 1:10){
+  trainIndex <- createDataPartition(TrainNew$CategoryMap, p = 0.10, list = FALSE, times = 1)
+  dataTrain <- TrainNew[trainIndex,]
+  
+  trainIndex <- createDataPartition(dataTrain$CategoryMap, p = 0.70, list = FALSE, times = 1)
+  dataTrainNew <- dataTrain[trainIndex,]
 
-############## Iteration 1######################################
-
-trainIndex <- createDataPartition(TrainNew$CategoryMap, p = 0.10, list = FALSE, times = 1)
-dataTrain <- TrainNew[trainIndex,]
-
-trainIndex <- createDataPartition(dataTrain$CategoryMap, p = 0.70, list = FALSE, times = 1)
-dataTrainNew <- dataTrain[trainIndex,]
-dataTest <- dataTrain[-trainIndex,]
-
-tree.NT1 <- rpart(CategoryMap~PdDistrict+X+Y+Date+months+Year, data = dataTrainNew, method = "class", parms = list(split = "gini"))
-
-tree.pred1 = predict(tree.NT1, dataTest, type = "class")
-pred.tree1 <- table(tree.pred1, dataTest$CategoryMap)
-
-#################Iteration 2 #############################################
-
-trainIndex <- createDataPartition(TrainNew$CategoryMap, p = 0.10, list = FALSE, times = 1)
-dataTrain <- TrainNew[trainIndex,]
-
-trainIndex <- createDataPartition(dataTrain$CategoryMap, p = 0.70, list = FALSE, times = 1)
-dataTrainNew <- dataTrain[trainIndex,]
-#dataTest <- dataTrain[-trainIndex,]
-
-tree.NT2 <- rpart(CategoryMap~PdDistrict+X+Y+Date+months+Year, data = dataTrainNew, method = "class", parms = list(split = "gini"))
-
-tree.pred2 = predict(tree.NT2, dataTest, type = "class")
-pred.tree2 <- table(tree.pred2, dataTest$CategoryMap)
-
-################ iteration 3 ###########################################
-trainIndex <- createDataPartition(TrainNew$CategoryMap, p = 0.10, list = FALSE, times = 1)
-dataTrain <- TrainNew[trainIndex,]
-
-trainIndex <- createDataPartition(dataTrain$CategoryMap, p = 0.70, list = FALSE, times = 1)
-dataTrainNew <- dataTrain[trainIndex,]
-#dataTest <- dataTrain[-trainIndex,]
-
-tree.NT3 <- rpart(CategoryMap~PdDistrict+X+Y+Date+months+Year, data = dataTrainNew, method = "class", parms = list(split = "gini"))
-
-tree.pred3 = predict(tree.NT3, dataTest, type = "class")
-pred.tree3 <- table(tree.pred3, dataTest$CategoryMap)
-
-############### Iteration 4 ##################################
-trainIndex <- createDataPartition(TrainNew$CategoryMap, p = 0.10, list = FALSE, times = 1)
-dataTrain <- TrainNew[trainIndex,]
-
-trainIndex <- createDataPartition(dataTrain$CategoryMap, p = 0.70, list = FALSE, times = 1)
-dataTrainNew <- dataTrain[trainIndex,]
-#dataTest <- dataTrain[-trainIndex,]
-
-tree.NT4 <- rpart(CategoryMap~PdDistrict+X+Y+Date+months+Year, data = dataTrainNew, method = "class", parms = list(split = "gini"))
-
-tree.pred4 = predict(tree.NT4, dataTest, type = "class")
-pred.tree4 <- table(tree.pred4, dataTest$CategoryMap)
-
-############ iteration 5 ########################################
-trainIndex <- createDataPartition(TrainNew$CategoryMap, p = 0.10, list = FALSE, times = 1)
-dataTrain <- TrainNew[trainIndex,]
-
-trainIndex <- createDataPartition(dataTrain$CategoryMap, p = 0.70, list = FALSE, times = 1)
-dataTrainNew <- dataTrain[trainIndex,]
-#dataTest <- dataTrain[-trainIndex,]
-
-tree.NT5 <- rpart(CategoryMap~PdDistrict+X+Y+Date+months+Year, data = dataTrainNew, method = "class", parms = list(split = "gini"))
-
-tree.pred5 = predict(tree.NT5, dataTest, type = "class")
-pred.tree5 <- table(tree.pred5, dataTest$CategoryMap)
-
-############### iteration 6 #################################
-trainIndex <- createDataPartition(TrainNew$CategoryMap, p = 0.10, list = FALSE, times = 1)
-dataTrain <- TrainNew[trainIndex,]
-
-trainIndex <- createDataPartition(dataTrain$CategoryMap, p = 0.70, list = FALSE, times = 1)
-dataTrainNew <- dataTrain[trainIndex,]
-#dataTest <- dataTrain[-trainIndex,]
-
-tree.NT6 <- rpart(CategoryMap~PdDistrict+X+Y+Date+months+Year, data = dataTrainNew, method = "class", parms = list(split = "gini"))
-
-tree.pred6 = predict(tree.NT6, dataTest, type = "class")
-pred.tree6 <- table(tree.pred6, dataTest$CategoryMap)
-
-############# iteration 7 ############################
-trainIndex <- createDataPartition(TrainNew$CategoryMap, p = 0.10, list = FALSE, times = 1)
-dataTrain <- TrainNew[trainIndex,]
-
-trainIndex <- createDataPartition(dataTrain$CategoryMap, p = 0.70, list = FALSE, times = 1)
-dataTrainNew <- dataTrain[trainIndex,]
-#dataTest <- dataTrain[-trainIndex,]
-
-tree.NT7 <- rpart(CategoryMap~PdDistrict+X+Y+Date+months+Year, data = dataTrainNew, method = "class", parms = list(split = "gini"))
-
-tree.pred7 = predict(tree.NT7, dataTest, type = "class")
-pred.tree7 <- table(tree.pred7, dataTest$CategoryMap)
-
-############# iteration 8 ############################
-trainIndex <- createDataPartition(TrainNew$CategoryMap, p = 0.10, list = FALSE, times = 1)
-dataTrain <- TrainNew[trainIndex,]
-
-trainIndex <- createDataPartition(dataTrain$CategoryMap, p = 0.70, list = FALSE, times = 1)
-dataTrainNew <- dataTrain[trainIndex,]
-#dataTest <- dataTrain[-trainIndex,]
-
-tree.NT8 <- rpart(CategoryMap~PdDistrict+X+Y+Date+months+Year, data = dataTrainNew, method = "class", parms = list(split = "gini"))
-
-tree.pred8 = predict(tree.NT8, dataTest, type = "class")
-pred.tree8 <- table(tree.pred8, dataTest$CategoryMap)
-############# iteration 9 ############################
-trainIndex <- createDataPartition(TrainNew$CategoryMap, p = 0.10, list = FALSE, times = 1)
-dataTrain <- TrainNew[trainIndex,]
-
-trainIndex <- createDataPartition(dataTrain$CategoryMap, p = 0.70, list = FALSE, times = 1)
-dataTrainNew <- dataTrain[trainIndex,]
-#dataTest <- dataTrain[-trainIndex,]
-
-tree.NT9 <- rpart(CategoryMap~PdDistrict+X+Y+Date+months+Year, data = dataTrainNew, method = "class", parms = list(split = "gini"))
-
-tree.pred9 = predict(tree.NT9, dataTest, type = "class")
-pred.tree9 <- table(tree.pred9, dataTest$CategoryMap)
-
-############# iteration 10 ############################
-trainIndex <- createDataPartition(TrainNew$CategoryMap, p = 0.10, list = FALSE, times = 1)
-dataTrain <- TrainNew[trainIndex,]
-
-trainIndex <- createDataPartition(dataTrain$CategoryMap, p = 0.70, list = FALSE, times = 1)
-dataTrainNew <- dataTrain[trainIndex,]
-#dataTest <- dataTrain[-trainIndex,]
-
-tree.NT10 <- rpart(CategoryMap~PdDistrict+X+Y+Date+months+Year, data = dataTrainNew, method = "class", parms = list(split = "gini"))
-
-tree.pred10 = predict(tree.NT10, dataTest, type = "class")
-pred.tree10 <- table(tree.pred10, dataTest$CategoryMap)
+  tree.NT <- rpart(CategoryMap~PdDistrict+X+Y+Date+months+Year, data = dataTrainNew, method = "class", parms = list(split = "gini"))
+  
+  tree.pred[,i] = predict(tree.NT, dataTest[,-8], type = "class")
+  #pred.tree[i] <- table(tree.pred[i], dataTest$CategoryMap)
+  
+}
 
 
 #######################################
@@ -244,11 +131,18 @@ getmode <- function(v) {
   uniqv[which.max(tabulate(match(v, uniqv)))]
 }
 
-pred.final <- vector()
+pred.final <- vector(length = nrow(dataTest))
 
-for( i in 1:length(tree.pred1)){
-  pred.final[i] <- getmode(c(as.numeric(tree.pred1)[i],as.numeric(tree.pred2)[i],as.numeric(tree.pred3)[i], as.numeric(tree.pred4)[i], as.numeric(tree.pred5)[i], as.numeric(tree.pred6)[i], as.numeric(tree.pred7)[i], as.numeric(tree.pred8)[i], as.numeric(tree.pred9)[i], as.numeric(tree.pred10)[i]))
+#for( i in 1:length(tree.pred1)){
+ # pred.final[i] <- getmode(c(as.numeric(tree.pred1)[i],as.numeric(tree.pred2)[i],as.numeric(tree.pred3)[i], as.numeric(tree.pred4)[i], as.numeric(tree.pred5)[i], as.numeric(tree.pred6)[i], as.numeric(tree.pred7)[i], as.numeric(tree.pred8)[i], as.numeric(tree.pred9)[i], as.numeric(tree.pred10)[i]))
+#}
+
+
+for( i in 1:nrow(dataTest)){
+
+      pred.final[i] <- getmode(c(as.numeric(tree.pred[i,1]),as.numeric(tree.pred[i,2]),as.numeric(tree.pred[i,3]), as.numeric(tree.pred[i,4]), as.numeric(tree.pred[i,5]), as.numeric(tree.pred[i,6]), as.numeric(tree.pred[i,7]), as.numeric(tree.pred[i,8]), as.numeric(tree.pred[i,9]), as.numeric(tree.pred[i,10])))
 }
+
 
 pred.RandomForest <- table(pred.final, dataTest$CategoryMap)
 
