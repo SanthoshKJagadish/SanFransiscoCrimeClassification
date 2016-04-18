@@ -154,3 +154,68 @@ tab<- table(pred.RF.inbuilt, dataTest$CategoryMap)
 tab
 accuracy <- (tab[1,1]+tab[2,2])/sum(tab)
 accuracy
+
+########################################################################
+### Applying preprocessing on Test data
+###################################################################
+Test <- read.csv("test.csv", header = TRUE, sep = ",", stringsAsFactors = FALSE, strip.white = TRUE)
+
+#Test$Category <- as.factor(Test$Category)
+Test$DayOfWeek <- as.factor(Test$DayOfWeek)
+Test$PdDistrict <- as.factor(Test$PdDistrict)
+#Test$Resolution <- as.factor(Test$Resolution)
+Test$Address <- as.character(Test$Address)
+Test$Dates <- as.POSIXct(Test$Dates, format = "%Y-%m-%d %H:%M:%S")
+Test$Date <- (format(Test$Dates, "%d"))
+Test$Year <- format(Test$Dates, "%Y")
+Test$months <- (format(Test$Dates, "%m"))
+Test$Hours <- (format(Test$Dates, "%H"))
+
+Test$Year <- as.numeric(Test$Year)
+Test$Date <- as.numeric(Test$Date)
+Test$months <- as.numeric(Test$months)
+Test$Hours <- as.numeric(Test$Hours)
+
+summary(Test)
+str(Test)
+
+Test <- na.omit(Test)
+
+Test <- Test[,c(-1, -2)]
+
+
+Test$DayOfWeekMap <- Test$DayOfWeek
+
+levels(Test$DayOfWeekMap) <- gsub("Sunday", 1, levels(Test$DayOfWeekMap))
+levels(Test$DayOfWeekMap) <- gsub("Saturday", 1, levels(Test$DayOfWeekMap))
+levels(Test$DayOfWeekMap) <- gsub("Monday", 0, levels(Test$DayOfWeekMap))
+levels(Test$DayOfWeekMap) <- gsub("Tuesday", 0, levels(Test$DayOfWeekMap))
+levels(Test$DayOfWeekMap) <- gsub("Wednesday", 0, levels(Test$DayOfWeekMap))
+levels(Test$DayOfWeekMap) <- gsub("Thursday", 0, levels(Test$DayOfWeekMap))
+levels(Test$DayOfWeekMap) <- gsub("Friday", 1, levels(Test$DayOfWeekMap))
+
+Test$AddressMap <- Test$Address
+
+Test$AddressMap[!grepl("/", Test$Address)] = "0"
+Test$AddressMap[grepl("/", Test$Address)] = "1"
+
+Test$AddressMap <- as.factor(Test$AddressMap)
+
+TestNew <- Test[,c(-1,-3)]
+tree.pred.test <- matrix(nrow = nrow(TestNew), ncol = 10)
+
+for ( i in 1:10){
+  tree.pred.test[,i] = predict(tree.NT, TestNew, type = "class")
+  #pred.tree[i] <- table(tree.pred[i], dataTest$CategoryMap)
+  
+}
+
+pred.final.Test <- vector(length = nrow(TestNew))
+
+
+for( i in 1:nrow(TestNew)){
+  
+  pred.final.Test[i] <- getmode(c(as.numeric(tree.pred.test[i,1]),as.numeric(tree.pred.test[i,2]),as.numeric(tree.pred.test[i,3]), as.numeric(tree.pred.test[i,4]), as.numeric(tree.pred.test[i,5]), as.numeric(tree.pred.test[i,6]), as.numeric(tree.pred.test[i,7]), as.numeric(tree.pred.test[i,8]), as.numeric(tree.pred.test[i,9]), as.numeric(tree.pred.test[i,10])))
+}
+
+
