@@ -5,7 +5,7 @@ library(rattle)
 library(rpart.plot)
 library(RColorBrewer)
 
-setwd("C:/Users/Anindita/Documents/ALDA/Project")
+setwd("C:/Users/Anindita/Documents/GitHub/SanFranciscoCrimeClassification")
 
 Train <- read.csv("train.csv", header = TRUE, sep = ",", stringsAsFactors = FALSE, strip.white = TRUE)
 
@@ -104,7 +104,7 @@ str(TrainNew)
 
 TrainNew <- TrainNew[sample(1:nrow(TrainNew), 100000,
                             replace=FALSE),]
-trainIndex <- createDataPartition(dataTrain$CategoryMap, p = 0.3, list = FALSE, times = 1)
+trainIndex <- createDataPartition(TrainNew$CategoryMap, p = 0.3, list = FALSE, times = 1)
 dataTest <- TrainNew[trainIndex,]
 tree.pred <- matrix(nrow = nrow(dataTest), ncol = 10)
 for ( i in 1:10){
